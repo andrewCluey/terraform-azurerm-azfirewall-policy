@@ -10,26 +10,51 @@ variable "location" {
   defautl     = "uksouth"
 }
 
-
 variable "fw_policy_name" {
   type        = string
   description = "description"
 }
 
-variable "fw_rule_collection_group_name" {
+variable "base_policy_id" {
   type        = string
   description = "description"
-  default     = ""
+  default     = null
+}
+
+variable "threat_intell_mode" {
+  type        = string
+  description = "description"
+  default     = "Alert"
+  validation {
+    condition     = var.threat_intell_mode == "Alert" || var.threat_intell_mode == "Deny" || var.threat_intell_mode == "Off"
+    error_message = "Sorry, but this input must be either 'Alert', 'Deny' or 'Off'."
+  }
+}
+
+variable "threat_intelligence_allowlist" {
+  type = object({
+    ip_addresses = list(string)
+    fqdns        = list(string)
+  })
+  description = <<EOD
+  ip_addresses - A list of IP addresses or IP address ranges that will be skipped for threat detection.
+  fqdns        - A list of FQDNs that will be skipped for threat detection.
+EOD
+  default     = {}
 }
 
 variable "dns" {
   type = object({
-    servers       = list(string)
+    servers       = string
     proxy_enabled = bool
   })
-  description = "An object to define a list of custom DNS server IP Addresses and whether DNS proxy should be enabled on Firewalls attached to this policy"
-  default     = null # Uses Azure DNS for name resolution.
+  description = <<EOD
+  servers       - A list of custom DNS servers' IP addresses.  
+  proxy_enabled - Whether to enable DNS proxy on Firewalls attached to this Firewall Policy? Defaults to false.
+EOD
+  default     = {}
 }
+
 
 variable "sku" {
   type        = string
@@ -37,17 +62,6 @@ variable "sku" {
   default     = "Standard"
 }
 
-variable "threat_intell_mode" {
-  type        = string
-  description = "description"
-  default     = "Alert"
-}
-
-
-variable "base_policy_id" {
-  type        = string
-  description = "description"
-}
 
 variable "tags" {
   type        = string

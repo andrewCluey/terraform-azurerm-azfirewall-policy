@@ -1,22 +1,25 @@
+
+
+resource "azurerm_firewall_policy" "fw_policy" {
+  name                          = var.fw_policy_name
+  resource_group_name           = var.resource_group_name
+  location                      = var.location
+  sku                           = var.sku
+  base_policy_id                = var.base_policy_id
+  threat_intelligence_mode      = var.threat_intell_mode
+  threat_intelligence_allowlist = var.threat_intelligence_allowlist
+  dns                           = var.dns
+  tags                          = var.tags
+}
+
+
+
+/*
 locals {
   policy_rule_collection_name = var.fw_rule_collection_group_name != "" ? var.fw_rule_collection_group_name : "${var.fw_policy_name}-rcg"
 }
 
-
-resource "azurerm_firewall_policy" "fw_policy" {
-  name                     = var.fw_policy_name
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  sku                      = var.sku
-  base_policy_id           = var.base_policy_id
-  threat_intelligence_mode = var.threat_intell_mode
-  dns                      = var.dns
-  tags                     = var.tags
-}
-
-
-
-resource "azurerm_firewall_policy_rule_collection_group" "example" {
+resource "azurerm_firewall_policy_rule_collection_group" "rule_collection_group" {
   name               = local.policy_rule_collection_name
   firewall_policy_id = azurerm_firewall_policy.fw_policy.id
   priority           = 500
@@ -68,3 +71,4 @@ resource "azurerm_firewall_policy_rule_collection_group" "example" {
     }
   }
 }
+*/
