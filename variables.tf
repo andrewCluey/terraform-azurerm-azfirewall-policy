@@ -7,7 +7,7 @@ variable "resource_group_name" {
 variable "location" {
   type        = string
   description = "description"
-  defautl     = "uksouth"
+  default     = "uksouth"
 }
 
 variable "fw_policy_name" {
@@ -31,28 +31,32 @@ variable "threat_intell_mode" {
   }
 }
 
-variable "threat_intelligence_allowlist" {
-  type = object({
-    ip_addresses = list(string)
-    fqdns        = list(string)
-  })
+variable "threat_allowlist" {
+  default = {}
   description = <<EOD
   ip_addresses - A list of IP addresses or IP address ranges that will be skipped for threat detection.
   fqdns        - A list of FQDNs that will be skipped for threat detection.
+  EXAMPLE:
+  threat_intelligence_allowlist = {
+    ip_addresses = ["8.8.8.8", "8.8.8.9"]
+    fqdns        = ["example.dev.com"]
+  }
 EOD
-  default     = {}
 }
 
 variable "dns" {
   type = object({
-    servers       = string
+    servers       = list(string)
     proxy_enabled = bool
   })
   description = <<EOD
   servers       - A list of custom DNS servers' IP addresses.  
   proxy_enabled - Whether to enable DNS proxy on Firewalls attached to this Firewall Policy? Defaults to false.
 EOD
-  default     = {}
+  default = {
+    servers = null
+    proxy_enabled = false
+  }
 }
 
 
@@ -64,7 +68,7 @@ variable "sku" {
 
 
 variable "tags" {
-  type        = string
+  type        = map
   description = ""
   default     = {}
 }
